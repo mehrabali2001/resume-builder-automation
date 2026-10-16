@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume for Mehrab Khan - Tech Template</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #000000;
+      --secondary: #0f172a;
+      --accent: #10b981;
+      --neon-green: #00ff66;
+      --bg-page: #080c14;
+      --card-bg: #0d131f;
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --code-bg: #131b2e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 40px 15px;
+    }
+
+    .resume-container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 14px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 255, 102, 0.15);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Template Banner */
+    .resume-banner {
+      width: 100%;
+      height: 190px;
+      position: relative;
+      background: linear-gradient(135deg, rgba(8, 12, 20, 0.95), rgba(15, 23, 42, 0.85)),
+                  url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      display: flex;
+      align-items: flex-end;
+      padding: 25px 40px;
+      border-bottom: 2px solid var(--neon-green);
+    }
+
+    .resume-badge {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: rgba(0, 255, 102, 0.12);
+      color: var(--neon-green);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      padding: 5px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 255, 102, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .resume-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--neon-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--neon-green);
+    }
+
+    .banner-text h1 {
+      color: #ffffff;
+      font-size: 2.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .banner-text .candidate-title {
+      font-family: 'Fira Code', monospace;
+      color: var(--neon-green);
+      font-size: 0.98rem;
+      margin-top: 5px;
+    }
+
+    /* Contact Terminal Strip */
+    .contact-strip {
+      background: #080d16;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .contact-item .term-prompt {
+      color: var(--neon-green);
+    }
+
+    /* Content Body */
+    .resume-body {
+      padding: 35px 40px;
+    }
+
+    .resume-section {
+      margin-bottom: 30px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--neon-green);
+      letter-spacing: 0.05em;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(0, 255, 102, 0.4), transparent);
+    }
+
+    .summary-text {
+      font-size: 0.94rem;
+      color: var(--text-main);
+      line-height: 1.7;
+      background: var(--code-bg);
+      padding: 16px 20px;
+      border-radius: 8px;
+      border-left: 3px solid var(--neon-green);
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tech-pill {
+      font-family: 'Fira Code', monospace;
+      background: rgba(0, 255, 102, 0.08);
+      color: #6ee7b7;
+      border: 1px solid rgba(0, 255, 102, 0.25);
+      font-size: 0.82rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    /* Work Experience Terminal Items */
+    .tech-card {
+      background: #090e1a;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .tech-card:hover {
+      border-color: rgba(0, 255, 102, 0.35);
+    }
+
+    .role-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .role-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .company-name {
+      color: #38bdf8;
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .period-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      background: #1e293b;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .bullet-list {
+      list-style-type: none;
+      margin-top: 8px;
+    }
+
+    .bullet-list li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .bullet-list li::before {
+      content: '>';
+      position: absolute;
+      left: 0;
+      color: var(--neon-green);
+      font-family: 'Fira Code', monospace;
+      font-weight: bold;
+    }
+
+    .bullet-list li strong {
+      color: #f1f5f9;
+    }
+
+    /* Projects & Architecture */
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .project-card {
+      background: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .project-card-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .project-card-stack {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.76rem;
+      color: var(--neon-green);
+      margin-bottom: 6px;
+    }
+
+    .project-card-desc {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Print & Actions */
+    .resume-actions {
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    .btn-print {
+      background: var(--neon-green);
+      color: #000;
+      border: none;
+      font-family: 'Space Grotesk', sans-serif;
+      padding: 10px 24px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 255, 102, 0.25);
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .resume-container { box-shadow: none; border: none; background: #fff; color: #000; }
+      .summary-text, .tech-card, .project-card { background: #f8fafc; border: 1px solid #ddd; }
+      .banner-text h1, .role-title, .project-card-title { color: #000; }
+      .no-print { display: none; }
+    }
+
+    @media (max-width: 650px) {
+      .project-grid { grid-template-columns: 1fr; }
+      .resume-body { padding: 24px 20px; }
+      .resume-banner { padding: 20px; height: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="resume-container">
+    
+    <!-- Banner Header -->
+    <div class="resume-banner">
+      <div class="resume-badge">System.Tech_Resume.v2</div>
+      <div class="banner-text">
+        <h1>Mehrab Khan</h1>
+        <div class="candidate-title">Lead Cloud Automation &amp; Platform Engineer [6+ YOE]</div>
+      </div>
+    </div>
+
+    <!-- Contact Terminal Strip -->
+    <div class="contact-strip">
+      <div class="contact-item">
+        <span class="term-prompt">$</span>
+        <span>mehrab.khan.dev@gmail.com</span>
+      </div>
+      <div class="contact-item">
+        <span class="term-prompt">$</span>
+        <span>+91 98765 43210</span>
+      </div>
+      <div class="contact-item">
+        <span class="term-prompt">$</span>
+        <span>Bengaluru, Karnataka, India</span>
+      </div>
+    </div>
+
+    <div class="resume-body">
+      
+      <!-- Technical Summary -->
+      <section class="resume-section">
+        <div class="section-header">
+          <span class="section-title">01 // TECHNICAL_PROFILE</span>
+          <div class="section-line"></div>
+        </div>
+        <p class="summary-text">
+          Lead Cloud Automation &amp; Platform Engineer with 6+ years of expertise architecting high-throughput distributed architectures, autonomous event-driven microservices, and enterprise LLM integrations. Proven record modernizing infrastructure pipelines at Razorpay and Swiggy, achieving 99.99% uptime while cutting recurring manual operational workloads by 65%.
+        </p>
+      </section>
+
+      <!-- Tech Stack -->
+      <section class="resume-section">
+        <div class="section-header">
+          <span class="section-title">02 // STACK &amp; CAPABILITIES</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="skills-grid">
+          <span class="tech-pill">Node.js / TypeScript</span>
+          <span class="tech-pill">Python 3.11</span>
+          <span class="tech-pill">n8n Automation Engine</span>
+          <span class="tech-pill">Google Gemini / OpenAI LLM APIs</span>
+          <span class="tech-pill">Docker &amp; Kubernetes (CKA)</span>
+          <span class="tech-pill">PostgreSQL / Redis / Kafka</span>
+          <span class="tech-pill">RESTful &amp; GraphQL APIs</span>
+          <span class="tech-pill">Git / CI/CD (GitHub Actions)</span>
+          <span class="tech-pill">Terraform &amp; AWS Cloud</span>
+        </div>
+      </section>
+
+      <!-- Work Experience -->
+      <section class="resume-section">
+        <div class="section-header">
+          <span class="section-title">03 // ENGINEERING_EXPERIENCE</span>
+          <div class="section-line"></div>
+        </div>
+
+        <div class="tech-card">
+          <div class="role-header">
+            <div>
+              <span class="role-title">Senior Automation &amp; Backend Engineer</span> • <span class="company-name">Razorpay Software</span>
+            </div>
+            <span class="period-badge">2022 – Present</span>
+          </div>
+          <ul class="bullet-list">
+            <li>Engineered 45+ enterprise integration pipelines and n8n workflows connecting merchant payment webhooks, reducing manual reconciliations by <strong>65%</strong>.</li>
+            <li>Embedded Google Gemini AI pipelines into merchant onboarding, reducing KYC verification cycles from 2 days to <strong>under 30 seconds</strong>.</li>
+            <li>Refactored core microservices on Kubernetes cluster, ensuring <strong>99.99% uptime</strong> during high-volume festive flash sales.</li>
+          </ul>
+        </div>
+
+        <div class="tech-card">
+          <div class="role-header">
+            <div>
+              <span class="role-title">Software Development Engineer (SDE-2)</span> • <span class="company-name">Swiggy</span>
+            </div>
+            <span class="period-badge">2019 – 2022</span>
+          </div>
+          <ul class="bullet-list">
+            <li>Designed high-throughput delivery dispatcher services handling <strong>2.5M+ daily order events</strong> across 500+ Indian cities.</li>
+            <li>Modernized automated testing pipelines, accelerating production release velocity by <strong>40%</strong>.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section class="resume-section">
+        <div class="section-header">
+          <span class="section-title">04 // PRODUCTION_PROJECTS</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="project-grid">
+          <div class="project-card">
+            <div class="project-card-title">🤖 AI-Driven Merchant KYC Triage Engine</div>
+            <div class="project-card-stack">[Python, n8n, Gemini API, Kafka]</div>
+            <div class="project-card-desc">Parses GSTIN and PAN merchant documents, validates against government portals via LLM, and triggers automated account activation.</div>
+          </div>
+          <div class="project-card">
+            <div class="project-card-title">⚡ High-Volume Payment Webhook Gateway</div>
+            <div class="project-card-stack">[Node.js, Redis, Docker, AWS]</div>
+            <div class="project-card-desc">Rate-limiting proxy capable of processing 12,000 payment callbacks/sec with zero dropped frames.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Education & Certs -->
+      <section class="resume-section">
+        <div class="section-header">
+          <span class="section-title">05 // EDUCATION_&amp;_CERTS</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="tech-card" style="margin-bottom: 0;">
+          <div class="role-header">
+            <div class="role-title">B.Tech in Computer Science &amp; Engineering — NIT Trichy</div>
+            <span class="period-badge">2015 – 2019</span>
+          </div>
+          <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 4px;">
+            Certifications: <strong>Certified Kubernetes Administrator (CKA)</strong> • <strong>AWS Certified Solutions Architect Associate</strong>
+          </p>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+  <div class="resume-actions no-print">
+    <button class="btn-print" onclick="window.print()">
+      [Ctrl+P] Export / Print Clean PDF
+    </button>
+  </div>
+
+</body>
+</html>

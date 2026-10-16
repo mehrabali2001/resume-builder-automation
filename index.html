@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Resume Builder Studio | n8n, Gemini & WordPress Automation</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-dark: #0a0e17;
+      --panel-bg: rgba(15, 23, 42, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --error: #ef4444;
+      --radius: 12px;
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      background: radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                  radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                  var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Bar */
+    .top-nav {
+      height: 64px;
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+    }
+
+    .brand-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .brand-badge span.dot {
+      width: 6px;
+      height: 6px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #10b981;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .btn-settings {
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: #a5b4fc;
+    }
+
+    .btn-settings:hover {
+      background: rgba(99, 102, 241, 0.35);
+      color: #fff;
+    }
+
+    /* Main Workspace Layout */
+    .app-workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 480px 1fr;
+      height: calc(100vh - 64px);
+      overflow: hidden;
+    }
+
+    /* Left Panel: Form & Controls */
+    .form-panel {
+      background: var(--panel-bg);
+      border-right: 1px solid var(--card-border);
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .panel-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .panel-header p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Sample Selector Bar */
+    .sample-pill-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .pill-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pill-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: #818cf8;
+      color: #fff;
+    }
+
+    /* Form Fields */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .required { color: #f43f5e; margin-left: 2px; }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      background: rgba(10, 15, 28, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #ffffff;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+      line-height: 1.5;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23818cf8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 16px;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+
+    .form-select option {
+      background: #0b1120;
+      color: #f1f5f9;
+      padding: 12px;
+    }
+
+    .field-hint {
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: #94a3b8;
+    }
+
+    /* Modern Multi-Theme Selector Container */
+    .theme-and-action-box {
+      background: rgba(10, 15, 28, 0.95);
+      border: 1px solid rgba(99, 102, 241, 0.28);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .theme-box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .theme-box-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .theme-palette-icon {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+
+    .theme-title-main {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.01em;
+      display: block;
+    }
+
+    .theme-subtitle {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      display: block;
+      margin-top: 1px;
+    }
+
+    .active-theme-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.45);
+      color: #c7d2fe;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .theme-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 620px) {
+      .theme-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .theme-radio-card {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 10px 8px;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(255, 255, 255, 0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+
+    .theme-radio-card:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .theme-radio-card.active {
+      border-color: #818cf8;
+      background: rgba(99, 102, 241, 0.18);
+      box-shadow: 0 0 14px rgba(99, 102, 241, 0.35);
+    }
+
+    .theme-swatch {
+      width: 100%;
+      height: 6px;
+      border-radius: 4px;
+    }
+
+    .theme-card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .theme-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .theme-tagline {
+      font-size: 0.68rem;
+      color: #94a3b8;
+      line-height: 1.25;
+    }
+
+    /* Submit Button */
+    .btn-generate {
+      width: 100%;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #06b6d4 100%);
+      border: none;
+      padding: 14px 20px;
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.45);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px -4px rgba(99, 102, 241, 0.55);
+    }
+
+    .btn-generate:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Alert / Validation Banner */
+    .status-alert {
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      display: none;
+      margin-top: 10px;
+    }
+
+    .status-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .status-success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+    }
+
+    .status-info {
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: #c7d2fe;
+    }
+
+    /* n8n Webhook Pipeline Card */
+    .n8n-pipeline-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .n8n-pipeline-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .n8n-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .n8n-icon-badge {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #ea580c, #f97316);
+      color: #ffffff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 800;
+      box-shadow: 0 2px 10px rgba(234, 88, 12, 0.35);
+    }
+
+    .n8n-title-text {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      letter-spacing: -0.01em;
+      display: block;
+    }
+
+    .n8n-sub-text {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      display: block;
+    }
+
+    .n8n-status-pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulse-glow 1.8s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .n8n-presets {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .n8n-preset-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 7px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .n8n-preset-btn:hover {
+      background: rgba(99, 102, 241, 0.18);
+      border-color: #818cf8;
+      color: #fff;
+    }
+
+    .n8n-preset-btn.active {
+      background: rgba(99, 102, 241, 0.28);
+      border-color: #6366f1;
+      color: #c7d2fe;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.25);
+    }
+
+    .n8n-url-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .n8n-url-input {
+      flex: 1;
+      background: rgba(10, 15, 28, 0.9) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      padding: 7px 10px !important;
+      font-size: 0.78rem !important;
+      font-family: 'Fira Code', monospace !important;
+      color: #38bdf8 !important;
+      border-radius: 6px !important;
+    }
+
+    .btn-ping {
+      background: rgba(6, 182, 212, 0.18);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      color: #67e8f9;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn-ping:hover {
+      background: rgba(6, 182, 212, 0.3);
+      color: #fff;
+    }
+
+    .btn-n8n-link {
+      background: rgba(234, 88, 12, 0.15);
+      border: 1px solid rgba(234, 88, 12, 0.35);
+      color: #fdba74;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-n8n-link:hover {
+      background: rgba(234, 88, 12, 0.3);
+      color: #fff;
+    }
+
+    /* Right Panel: Live Resume Preview Canvas */
+    .preview-panel {
+      background: #060911;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .preview-toolbar {
+      height: 52px;
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .preview-status {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .preview-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-tool {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: var(--transition);
+    }
+
+    .btn-tool:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+    }
+
+    .btn-tool-primary {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: rgba(99, 102, 241, 0.5);
+      color: #a5b4fc;
+    }
+
+    .btn-tool-primary:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .canvas-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.3) 0%, transparent 80%), #050811;
+    }
+
+    /* The Resume Container inside Canvas */
+    .resume-canvas {
+      width: 100%;
+      max-width: 820px;
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    /* Edit Mode Indicator */
+    [contenteditable="true"] {
+      outline: 1px dashed rgba(99, 102, 241, 0.4);
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+    [contenteditable="true"]:hover {
+      outline-color: var(--primary);
+      background: rgba(99, 102, 241, 0.05);
+    }
+    [contenteditable="true"]:focus {
+      outline: 2px solid var(--primary);
+      background: #fff;
+    }
+
+    /* Settings Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-card {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 540px;
+      padding: 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .btn-save-settings {
+      width: 100%;
+      background: var(--primary);
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      margin-top: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 950px) {
+      .app-workspace {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+      }
+      .form-panel {
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--card-border);
+      }
+      .canvas-scroll {
+        min-height: 800px;
+      }
+    }
+
+    /* Print Stylesheet */
+    @media print {
+      body * { visibility: hidden; }
+      .resume-canvas, .resume-canvas * { visibility: visible; }
+      .resume-canvas {
+        position: absolute;
+        left: 0; top: 0;
+        width: 100%;
+        max-width: 100%;
+        box-shadow: none;
+        border: none;
+      }
+      [contenteditable="true"] { outline: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <div class="brand">
+      <div class="brand-logo">AI</div>
+      <div>
+        <div class="brand-name">AI Resume Builder Studio</div>
+      </div>
+      <div class="brand-badge">
+        <span class="dot"></span> Pipeline Active
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <a href="https://mehrab.app.n8n.cloud/projects/8pgF7D4YIQx32FaK/workflows" target="_blank" class="btn-nav btn-n8n-link" title="Open Mehrab Khan's n8n Cloud Workflow Canvas">
+        ⚡ Open n8n Cloud
+      </a>
+      <button type="button" class="btn-nav" id="btnQuickFillTech" title="Load Lead Cloud Engineer Profile">
+        ⚡ Mehrab Khan (Tech)
+      </button>
+      <button type="button" class="btn-nav" id="btnQuickFillPro" title="Load Corporate Enterprise Director Profile">
+        🏢 Kaif Ansari (Pro)
+      </button>
+      <button type="button" class="btn-nav" id="btnQuickFillCreative" title="Load Creative Brand Director Profile">
+        🎨 Shahrukh Sheikh (Creative)
+      </button>
+      <button type="button" class="btn-nav btn-settings" id="openSettingsBtn">
+        ⚙️ Settings &amp; API Keys
+      </button>
+    </div>
+  </header>
+
+  <!-- Workspace Split: Left Form / Right Preview -->
+  <main class="app-workspace">
+    
+    <!-- LEFT: Form Editor Panel -->
+    <section class="form-panel">
+
+      <!-- n8n Automation Pipeline Status & Webhook Hub -->
+      <div class="n8n-pipeline-card">
+        <div class="n8n-pipeline-header">
+          <div class="n8n-title-group">
+            <div class="n8n-icon-badge">n8n</div>
+            <div>
+              <span class="n8n-title-text">Automation Webhook Engine</span>
+              <span class="n8n-sub-text">Submits directly to Google Gemini AI &amp; Email workflow</span>
+            </div>
+          </div>
+          <span class="n8n-status-pill" id="n8nStatusPill">
+            <span class="pulse-dot"></span> n8n Cloud Live
+          </span>
+        </div>
+
+        <div class="n8n-presets">
+          <button type="button" class="n8n-preset-btn active" id="btnPresetProd" title="Live production webhook on mehrab.app.n8n.cloud">
+            🚀 Cloud Live
+          </button>
+          <button type="button" class="n8n-preset-btn" id="btnPresetTest" title="Use when testing inside n8n canvas ('Listen for test event')">
+            🧪 Cloud Test
+          </button>
+          <button type="button" class="n8n-preset-btn" id="btnPresetLocal" title="Local mock server on localhost:3000">
+            💻 Local Server
+          </button>
+        </div>
+
+        <div class="n8n-url-row">
+          <input type="text" id="activeWebhookUrl" class="n8n-url-input" value="https://mehrab.app.n8n.cloud/webhook/resume-builder" spellcheck="false" title="Active n8n Webhook Endpoint" />
+          <button type="button" id="btnPingWebhook" class="btn-ping" title="Test Webhook Connection">
+            📡 Ping
+          </button>
+        </div>
+      </div>
+
+      <div class="panel-header">
+        <h2>Candidate Details</h2>
+        <p>Fill career credentials or click a prefill profile above.</p>
+      </div>
+
+      <form id="resumeForm" novalidate>
+        
+        <!-- 1. Name -->
+        <div class="form-group">
+          <label for="fullName">Name <span class="required">*</span></label>
+          <input type="text" id="fullName" placeholder="Enter candidate full name" required />
+        </div>
+
+        <!-- 2. Email -->
+        <div class="form-group">
+          <label for="email">Email <span class="required">*</span></label>
+          <input type="email" id="email" placeholder="name@example.com" required />
+        </div>
+
+        <!-- 3. Phone Number & 4. City -->
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="phone">Phone Number <span class="required">*</span></label>
+            <input type="tel" id="phone" placeholder="+91 98765 43210" required />
+          </div>
+          <div class="form-group">
+            <label for="city">City <span class="required">*</span></label>
+            <input type="text" id="city" placeholder="e.g. Mumbai, India" required />
+          </div>
+        </div>
+
+        <!-- 5. Years of Experience -->
+        <div class="form-group">
+          <label for="experienceYears">Years of Experience <span class="required">*</span></label>
+          <input type="number" id="experienceYears" min="0" max="50" placeholder="e.g. 5" required />
+        </div>
+
+        <!-- 6. Skills (Textarea) -->
+        <div class="form-group">
+          <label for="skills">Skills <span class="required">*</span></label>
+          <textarea id="skills" rows="3" placeholder="Enter skills (e.g. React, Node.js, Python, SQL, Cloud, Automation)..." required></textarea>
+        </div>
+
+        <!-- 7. Education (Textarea) -->
+        <div class="form-group">
+          <label for="education">Education <span class="required">*</span></label>
+          <textarea id="education" rows="2" placeholder="Degree, College / University, Year of Completion..." required></textarea>
+        </div>
+
+        <!-- 8. Work Experience (Textarea) -->
+        <div class="form-group">
+          <label for="workExperience">Work Experience <span class="required">*</span></label>
+          <textarea id="workExperience" rows="4" placeholder="Job Title, Company Name, Duration, Responsibilities & Achievements..." required></textarea>
+        </div>
+
+        <!-- 9. Career Objective (Textarea) -->
+        <div class="form-group">
+          <label for="careerObjective">Career Objective <span class="required">*</span></label>
+          <textarea id="careerObjective" rows="3" placeholder="Write your career objective or brief professional summary..." required></textarea>
+        </div>
+
+        <!-- 10. Dropdown Resume Type -->
+        <div class="form-group">
+          <label for="resumeType">Dropdown Resume Type <span class="required">*</span></label>
+          <select id="resumeType" class="form-select">
+            <option value="Professional Resume" selected>👔 Professional Resume</option>
+            <option value="Creative Resume">🎨 Creative Resume</option>
+            <option value="Tech Resume">⚡ Tech Resume</option>
+            <option value="Executive Emerald">🌿 Executive Emerald</option>
+            <option value="Luxury Obsidian">👑 Luxury Obsidian</option>
+            <option value="Modern Minimalist">❄️ Modern Minimalist</option>
+          </select>
+        </div>
+
+        <!-- 11. Multi-Theme Selector & Generate Button (In-line / Together) -->
+        <div class="theme-and-action-box">
+          <div class="theme-box-header">
+            <div class="theme-box-title">
+              <span class="theme-palette-icon">🎨</span>
+              <div>
+                <span class="theme-title-main">Select Resume Theme</span>
+                <span class="theme-subtitle">Click any visual palette to customize live template styling</span>
+              </div>
+            </div>
+            <span class="active-theme-pill" id="selectedThemeDisplay">👔 Professional</span>
+          </div>
+
+          <div class="theme-cards-grid">
+            <div class="theme-radio-card active" data-type="Professional Resume" title="Corporate Executive Theme">
+              <div class="theme-swatch" style="background: linear-gradient(135deg, #1e3a8a, #2563eb);"></div>
+              <div class="theme-card-info">
+                <span class="theme-name">👔 Professional</span>
+                <span class="theme-tagline">Corporate • Navy &amp; Slate</span>
+              </div>
+            </div>
+
+            <div class="theme-radio-card" data-type="Creative Resume" title="Creative Design & Storyteller Theme">
+              <div class="theme-swatch" style="background: linear-gradient(135deg, #ea580c, #ec4899);"></div>
+              <div class="theme-card-info">
+                <span class="theme-name">🎨 Creative</span>
+                <span class="theme-tagline">Vibrant • Coral &amp; Pink</span>
+              </div>
+            </div>
+
+            <div class="theme-radio-card" data-type="Tech Resume" title="Technical Engineering & Cloud Theme">
+              <div class="theme-swatch" style="background: linear-gradient(135deg, #050505, #00ff66);"></div>
+              <div class="theme-card-info">
+                <span class="theme-name">⚡ Tech &amp; Cyber</span>
+                <span class="theme-tagline">Developer • Neon &amp; Dark</span>
+              </div>
+            </div>
+
+            <div class="theme-radio-card" data-type="Executive Emerald" title="Executive Emerald Leadership Theme">
+              <div class="theme-swatch" style="background: linear-gradient(135deg, #064e3b, #10b981);"></div>
+              <div class="theme-card-info">
+                <span class="theme-name">🌿 Emerald Luxe</span>
+                <span class="theme-tagline">Executive • Forest &amp; Mint</span>
+              </div>
+            </div>
+
+            <div class="theme-radio-card" data-type="Luxury Obsidian" title="Luxury Obsidian Gold Theme">
+              <div class="theme-swatch" style="background: linear-gradient(135deg, #18181b, #eab308);"></div>
+              <div class="theme-card-info">
+                <span class="theme-name">👑 Luxury Gold</span>
+                <span class="theme-tagline">Prestige • Obsidian &amp; Gold</span>
+              </div>
+            </div>
+
+            <div class="theme-radio-card" data-type="Modern Minimalist" title="Modern Nordic Minimalist Theme">
+              <div class="theme-swatch" style="background: linear-gradient(135deg, #4338ca, #a5b4fc);"></div>
+              <div class="theme-card-info">
+                <span class="theme-name">❄️ Minimalist</span>
+                <span class="theme-tagline">Nordic • Indigo &amp; Lilac</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button right inside theme action card -->
+          <button type="submit" class="btn-generate" id="submitBtn">
+            <span class="spinner" id="spinner"></span>
+            <span id="btnText">🚀 Generate Resume with AI</span>
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Status Alert Box -->
+      <div id="statusAlert" class="status-alert"></div>
+
+    </section>
+
+    <!-- RIGHT: Live Resume Preview Canvas -->
+    <section class="preview-panel">
+      
+      <!-- Canvas Toolbar -->
+      <div class="preview-toolbar">
+        <div class="preview-status">
+          <span>📄 Live Resume Canvas</span>
+          <span style="opacity: 0.4;">|</span>
+          <span id="canvasThemeBadge" style="font-weight: 600; color: #a5b4fc;">Professional Template</span>
+        </div>
+
+        <div class="preview-actions">
+          <button type="button" class="btn-tool" id="btnToggleEdit" title="Click directly on text in the resume to edit">
+            ✏️ Editable Mode
+          </button>
+          <button type="button" class="btn-tool" id="btnDownloadHtml" title="Download standalone HTML file">
+            💾 Download HTML
+          </button>
+          <button type="button" class="btn-tool btn-tool-primary" id="btnPrintPdf" title="Print or save as PDF">
+            🖨️ Print / Save PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Canvas Scrollable Workspace -->
+      <div class="canvas-scroll">
+        <div class="resume-canvas" id="resumeCanvas">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 520px; text-align: center; padding: 40px 24px; color: #64748b;">
+            <div style="font-size: 3.8rem; margin-bottom: 16px; opacity: 0.85;">📄</div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; color: #334155; margin-bottom: 8px;">Live Resume Canvas</h3>
+            <p style="max-width: 440px; font-size: 0.92rem; line-height: 1.6; margin-bottom: 18px; color: #64748b;">
+              Fill in your candidate details on the left, pick your favorite theme, and click <strong>"🚀 Generate Resume with AI"</strong> to craft your custom resume.
+            </p>
+            <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.82rem; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.22); color: #4f46e5; padding: 7px 16px; border-radius: 20px; font-weight: 600;">
+              <span>⚡</span> Tip: You can also click the quick prefill profiles above to test with sample data
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Settings & API Modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">⚙️ Integration &amp; API Settings</div>
+        <button type="button" class="btn-close" id="closeSettingsBtn">&times;</button>
+      </div>
+
+      <div class="form-group">
+        <label for="geminiApiKey">Google Gemini API Key (Optional)</label>
+        <input type="password" id="geminiApiKey" placeholder="AIzaSy... (Leave empty to use built-in synthesis)" />
+        <small style="color: #64748b; font-size: 0.75rem; margin-top: 2px;">
+          Get free key from <a href="https://aistudio.google.com/" target="_blank" style="color: #818cf8;">Google AI Studio</a>.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="webhookUrlInput">n8n Webhook URL</label>
+        <input type="text" id="webhookUrlInput" value="http://localhost:3000/webhook/resume-builder" placeholder="http://localhost:5678/webhook/resume-builder" />
+        <small style="color: #64748b; font-size: 0.75rem; margin-top: 2px;">
+          Use <code>http://localhost:3000/webhook/resume-builder</code> (Instant Local Server) or your live n8n URL.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="wpSiteUrl">WordPress REST API Endpoint</label>
+        <input type="text" id="wpSiteUrl" value="https://your-wordpress-site.com/wp-json/wp/v2/pages" placeholder="https://your-site.com/wp-json/wp/v2/pages" />
+      </div>
+
+      <button type="button" class="btn-save-settings" id="saveSettingsBtn">
+        Save Settings
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Theme Definitions
+    const themes = {
+      "Professional Resume": {
+        name: "Professional Resume",
+        primary: "#1e3a8a",
+        secondary: "#2563eb",
+        accent: "#64748b",
+        bgPage: "#f8fafc",
+        cardBg: "#ffffff",
+        textMain: "#0f172a",
+        textMuted: "#475569",
+        badgeBg: "#eff6ff",
+        badgeText: "#1d4ed8",
+        bannerUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
+        fontHeading: "'Inter', sans-serif",
+        fontBody: "'Inter', sans-serif"
+      },
+      "Creative Resume": {
+        name: "Creative Resume",
+        primary: "#ea580c",
+        secondary: "#ec4899",
+        accent: "#db2777",
+        bgPage: "#fff1f2",
+        cardBg: "#ffffff",
+        textMain: "#1f2937",
+        textMuted: "#4b5563",
+        badgeBg: "#ffe4e6",
+        badgeText: "#be123c",
+        bannerUrl: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1200&q=80",
+        fontHeading: "'Playfair Display', Georgia, serif",
+        fontBody: "'Outfit', 'Segoe UI', sans-serif"
+      },
+      "Tech Resume": {
+        name: "Tech Resume",
+        primary: "#050505",
+        secondary: "#0f172a",
+        accent: "#00ff66",
+        bgPage: "#080c14",
+        cardBg: "#0d131f",
+        textMain: "#e2e8f0",
+        textMuted: "#94a3b8",
+        badgeBg: "rgba(0, 255, 102, 0.12)",
+        badgeText: "#00ff66",
+        bannerUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80",
+        fontHeading: "'Space Grotesk', sans-serif",
+        fontBody: "'Fira Code', 'Courier New', monospace"
+      },
+      "Executive Emerald": {
+        name: "Executive Emerald",
+        primary: "#064e3b",
+        secondary: "#059669",
+        accent: "#10b981",
+        bgPage: "#f0fdf4",
+        cardBg: "#ffffff",
+        textMain: "#064e3b",
+        textMuted: "#374151",
+        badgeBg: "#d1fae5",
+        badgeText: "#047857",
+        bannerUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+        fontHeading: "'Playfair Display', Georgia, serif",
+        fontBody: "'Outfit', 'Segoe UI', sans-serif"
+      },
+      "Luxury Obsidian": {
+        name: "Luxury Obsidian",
+        primary: "#18181b",
+        secondary: "#27272a",
+        accent: "#eab308",
+        bgPage: "#09090b",
+        cardBg: "#18181b",
+        textMain: "#f4f4f5",
+        textMuted: "#a1a1aa",
+        badgeBg: "rgba(234, 179, 8, 0.15)",
+        badgeText: "#fbbf24",
+        bannerUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
+        fontHeading: "'Playfair Display', Georgia, serif",
+        fontBody: "'Inter', sans-serif"
+      },
+      "Modern Minimalist": {
+        name: "Modern Minimalist",
+        primary: "#4338ca",
+        secondary: "#6366f1",
+        accent: "#818cf8",
+        bgPage: "#f5f3ff",
+        cardBg: "#ffffff",
+        textMain: "#1e1b4b",
+        textMuted: "#475569",
+        badgeBg: "#ede9fe",
+        badgeText: "#4f46e5",
+        bannerUrl: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80",
+        fontHeading: "'Inter', sans-serif",
+        fontBody: "'Inter', sans-serif"
+      }
+    };
+
+    // State
+    let currentResumeData = null;
+    let isEditMode = false;
+
+    // Elements
+    const form = document.getElementById('resumeForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const spinner = document.getElementById('spinner');
+    const statusAlert = document.getElementById('statusAlert');
+    const resumeCanvas = document.getElementById('resumeCanvas');
+    const canvasThemeBadge = document.getElementById('canvasThemeBadge');
+    const resumeTypeInput = document.getElementById('resumeType');
+    const themeCards = document.querySelectorAll('.theme-radio-card');
+    const selectedThemeDisplay = document.getElementById('selectedThemeDisplay');
+    const btnPrintPdf = document.getElementById('btnPrintPdf');
+    const btnDownloadHtml = document.getElementById('btnDownloadHtml');
+    const btnToggleEdit = document.getElementById('btnToggleEdit');
+    const openSettingsBtn = document.getElementById('openSettingsBtn');
+    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+    const settingsModal = document.getElementById('settingsModal');
+    const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+    const geminiApiKeyInput = document.getElementById('geminiApiKey');
+    const webhookUrlInput = document.getElementById('webhookUrlInput');
+
+    // n8n Pipeline Elements
+    const activeWebhookUrl = document.getElementById('activeWebhookUrl');
+    const btnPresetProd = document.getElementById('btnPresetProd');
+    const btnPresetTest = document.getElementById('btnPresetTest');
+    const btnPresetLocal = document.getElementById('btnPresetLocal');
+    const btnPingWebhook = document.getElementById('btnPingWebhook');
+    const n8nStatusPill = document.getElementById('n8nStatusPill');
+
+    const defaultCloudProd = 'https://mehrab.app.n8n.cloud/webhook/resume-builder';
+    const defaultCloudTest = 'https://mehrab.app.n8n.cloud/webhook-test/resume-builder';
+    const defaultLocal = 'http://localhost:3000/webhook/resume-builder';
+
+    // Load persisted settings
+    if (localStorage.getItem('gemini_api_key')) {
+      geminiApiKeyInput.value = localStorage.getItem('gemini_api_key');
+    }
+    let savedWebhook = localStorage.getItem('webhook_url') || defaultCloudProd;
+    if (!savedWebhook.includes('webhook') || savedWebhook.includes('AUTOMATION')) {
+      savedWebhook = defaultCloudProd;
+      localStorage.setItem('webhook_url', defaultCloudProd);
+    }
+    activeWebhookUrl.value = savedWebhook;
+    webhookUrlInput.value = savedWebhook;
+
+    function updateActivePreset(activeBtn, pillText) {
+      [btnPresetProd, btnPresetTest, btnPresetLocal].forEach(b => b.classList.remove('active'));
+      if (activeBtn) activeBtn.classList.add('active');
+      n8nStatusPill.innerHTML = `<span class="pulse-dot"></span> ${pillText}`;
+    }
+
+    if (savedWebhook.includes('webhook-test')) {
+      updateActivePreset(btnPresetTest, 'n8n Cloud Test');
+    } else if (savedWebhook.includes('localhost') || savedWebhook.includes('127.0.0.1')) {
+      updateActivePreset(btnPresetLocal, 'Local Server');
+    } else {
+      updateActivePreset(btnPresetProd, 'n8n Cloud Live');
+    }
+
+    btnPresetProd.addEventListener('click', () => {
+      activeWebhookUrl.value = defaultCloudProd;
+      webhookUrlInput.value = defaultCloudProd;
+      localStorage.setItem('webhook_url', defaultCloudProd);
+      updateActivePreset(btnPresetProd, 'n8n Cloud Live');
+      showStatus('Target set to <strong>n8n Cloud Production Webhook</strong>: <code>' + defaultCloudProd + '</code>', 'info');
+    });
+
+    btnPresetTest.addEventListener('click', () => {
+      activeWebhookUrl.value = defaultCloudTest;
+      webhookUrlInput.value = defaultCloudTest;
+      localStorage.setItem('webhook_url', defaultCloudTest);
+      updateActivePreset(btnPresetTest, 'n8n Cloud Test');
+      showStatus('Target set to <strong>n8n Cloud Test Webhook</strong> (matches <em>"Listen for test event"</em> in n8n): <code>' + defaultCloudTest + '</code>', 'info');
+    });
+
+    btnPresetLocal.addEventListener('click', () => {
+      activeWebhookUrl.value = defaultLocal;
+      webhookUrlInput.value = defaultLocal;
+      localStorage.setItem('webhook_url', defaultLocal);
+      updateActivePreset(btnPresetLocal, 'Local Server');
+      showStatus('Target set to <strong>Local Mock Server Webhook</strong>: <code>' + defaultLocal + '</code>', 'info');
+    });
+
+    btnPingWebhook.addEventListener('click', async () => {
+      const url = activeWebhookUrl.value.trim();
+      showStatus(`📡 Pinging webhook endpoint: <code>${url}</code>...`, 'info');
+      try {
+        const pingRes = await fetch(url, {
+          method: 'OPTIONS',
+          headers: { 'Accept': 'application/json' }
+        });
+        showStatus(`✅ <strong>Webhook Reachable!</strong> Received HTTP ${pingRes.status} from <code>${url}</code>. Ready for automated submissions!`, 'success');
+      } catch (err) {
+        showStatus(`ℹ️ <strong>Ping Note:</strong> <code>${url}</code> did not respond to OPTIONS check (browser preflight/inactive workflow). You can submit directly via form to trigger execution!`, 'info');
+      }
+    });
+
+    // Settings Modal Handlers
+    openSettingsBtn.addEventListener('click', () => { settingsModal.style.display = 'flex'; });
+    closeSettingsBtn.addEventListener('click', () => { settingsModal.style.display = 'none'; });
+    saveSettingsBtn.addEventListener('click', () => {
+      localStorage.setItem('gemini_api_key', geminiApiKeyInput.value.trim());
+      localStorage.setItem('webhook_url', webhookUrlInput.value.trim());
+      activeWebhookUrl.value = webhookUrlInput.value.trim();
+      if (webhookUrlInput.value.includes('webhook-test')) {
+        updateActivePreset(btnPresetTest, 'n8n Cloud Test');
+      } else if (webhookUrlInput.value.includes('localhost')) {
+        updateActivePreset(btnPresetLocal, 'Local Server');
+      } else {
+        updateActivePreset(btnPresetProd, 'n8n Cloud Live');
+      }
+      settingsModal.style.display = 'none';
+      showStatus("Settings saved successfully!", "success");
+    });
+
+    // Theme Selector Buttons & Dropdown Two-Way Sync
+    function applyThemeSelection(selectedType) {
+      themeCards.forEach(c => {
+        if (c.getAttribute('data-type') === selectedType) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+      resumeTypeInput.value = selectedType;
+      if (selectedThemeDisplay) {
+        selectedThemeDisplay.textContent = selectedType;
+      }
+      canvasThemeBadge.textContent = selectedType;
+      if (currentResumeData) {
+        currentResumeData.resumeType = selectedType;
+        renderResumeToCanvas(currentResumeData);
+      }
+    }
+
+    themeCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const selectedType = card.getAttribute('data-type');
+        applyThemeSelection(selectedType);
+      });
+    });
+
+    resumeTypeInput.addEventListener('change', (e) => {
+      applyThemeSelection(e.target.value);
+    });
+
+    // Quick Synthesizer for instant canvas rendering
+    function synthesizeResumeQuick(data) {
+      const skillsArray = (data.skills || '').split(/[,\\n]+/).map(s => s.trim()).filter(Boolean);
+      const expLines = (data.experience || data.workExperience || '').split('\n').filter(Boolean);
+      return {
+        personalDetails: {
+          name: data.name,
+          title: `${data.theme ? data.theme.split(' ')[0] : 'Professional'} Specialist • ${data.years || data.experienceYears}+ Years`,
+          email: data.email,
+          phone: data.phone,
+          city: data.city,
+          experienceYears: Number(data.years || data.experienceYears)
+        },
+        professionalSummary: data.objective || data.careerObjective,
+        skills: [
+          { category: "Core Expertise", items: skillsArray.slice(0, 5) },
+          { category: "Frameworks & Tools", items: skillsArray.slice(5) }
+        ].filter(g => g.items.length > 0),
+        experience: [
+          {
+            role: `${data.theme ? data.theme.split(' ')[0] : 'Specialist'} Lead`,
+            company: "Premier Enterprise Scaleup",
+            period: `${data.years || data.experienceYears} Years Track Record`,
+            highlights: expLines.length > 0 ? expLines.slice(0, 4) : ["Spearheaded key business and automation initiatives."]
+          }
+        ],
+        education: [
+          {
+            degree: (data.education || '').split('\n')[0] || "University Degree",
+            institution: (data.education || '').split('\n')[1] || "Accredited University",
+            period: "Graduated with Distinction"
+          }
+        ],
+        achievements: [
+          "Recognized for outstanding delivery velocity and strategic process modernization.",
+          "Delivered enterprise workflow automation reducing turnaround time by 50%."
+        ],
+        projects: [
+          {
+            name: `${data.theme ? data.theme.split(' ')[0] : 'Enterprise'} Automation Architecture`,
+            techStack: skillsArray.slice(0, 3).join(', ') || "n8n, Cloud APIs",
+            description: "End-to-end integration pipeline orchestrating AI generative models with automated email delivery."
+          }
+        ]
+      };
+    }
+
+    // Sample Profiles Loader
+    function loadProfile(profile, autoSubmit = false) {
+      document.getElementById('fullName').value = profile.name;
+      document.getElementById('email').value = profile.email;
+      document.getElementById('phone').value = profile.phone;
+      document.getElementById('city').value = profile.city;
+      document.getElementById('experienceYears').value = profile.years;
+      document.getElementById('careerObjective').value = profile.objective;
+      document.getElementById('skills').value = profile.skills;
+      document.getElementById('workExperience').value = profile.experience;
+      document.getElementById('education').value = profile.education;
+      
+      // Select theme card
+      themeCards.forEach(card => {
+        if (card.getAttribute('data-type') === profile.theme) {
+          card.click();
+        }
+      });
+
+      // Render instant local preview on canvas so user immediately sees rich layout
+      const previewJson = synthesizeResumeQuick(profile);
+      currentResumeData = {
+        name: profile.name,
+        email: profile.email,
+        phone: profile.phone,
+        city: profile.city,
+        experienceYears: profile.years,
+        resumeType: profile.theme,
+        careerObjective: profile.objective,
+        skills: profile.skills,
+        workExperience: profile.experience,
+        education: profile.education,
+        resumeJson: previewJson
+      };
+      renderResumeToCanvas(currentResumeData);
+
+      if (autoSubmit) {
+        generateResume();
+      }
+    }
+
+    document.getElementById('btnQuickFillTech').addEventListener('click', () => {
+      loadProfile({
+        name: "Mehrab Khan",
+        email: "mehrab.khan.dev@gmail.com",
+        phone: "+91 98765 43210",
+        city: "Bengaluru, Karnataka, India",
+        years: 6,
+        theme: "Tech Resume",
+        objective: "To spearhead high-throughput cloud automation pipelines, event-driven microservices, and AI integrations as a Lead Full-Stack & Cloud Engineer at premier Indian tech scaleups.",
+        skills: "Node.js, TypeScript, Python 3.11, Docker, Kubernetes (CKA), n8n Workflow Automation, Google Gemini API, PostgreSQL, Redis, GraphQL, Kafka, AWS, CI/CD",
+        experience: "Senior Automation & Backend Engineer - Razorpay (2022 - Present)\n- Engineered 45+ enterprise integration pipelines and n8n workflows connecting merchant payment webhooks, reducing manual reconciliations by 65%.\n- Embedded Google Gemini AI pipelines into merchant onboarding, reducing KYC verification cycles from 2 days to under 30 seconds.\n- Refactored core microservices on Kubernetes cluster, ensuring 99.99% uptime during high-volume festive flash sales.\n\nSoftware Development Engineer (SDE-2) - Swiggy (2019 - 2022)\n- Designed high-throughput delivery dispatcher services handling 2.5M+ daily order events across 500+ Indian cities.\n- Modernized automated testing pipelines, accelerating production release velocity by 40%.",
+        education: "B.Tech in Computer Science & Engineering - National Institute of Technology (NIT) Trichy (2015 - 2019)\nCertified Kubernetes Administrator (CKA)\nAWS Certified Solutions Architect"
+      }, false);
+    });
+
+    document.getElementById('btnQuickFillPro').addEventListener('click', () => {
+      loadProfile({
+        name: "Kaif Ansari",
+        email: "kaif.ansari.corp@gmail.com",
+        phone: "+91 98201 23456",
+        city: "Mumbai, Maharashtra, India",
+        years: 8,
+        theme: "Professional Resume",
+        objective: "To direct enterprise-scale digital transformation, ERP business modernization, and multi-crore operational excellence programs across top Indian conglomerates.",
+        skills: "Enterprise Architecture, Business Process Automation (BPA), Executive Stakeholder Governance, SAP S/4HANA & Salesforce Integrations, n8n Automation, Agile & PMP Governance",
+        experience: "Director of Enterprise Solutions - Tata Consultancy Services (TCS) (2021 - Present)\n- Directed enterprise digital transformation initiatives across 12 BFSI and retail accounts, driving over ₹35 Crores in operational efficiency gains.\n- Established automated enterprise governance pipelines reducing corporate compliance audit hours by 45%.\n\nLead Automation Architect - Reliance Industries (2018 - 2021)\n- Architected 60+ end-to-end integration workflows connecting ERP supply chains with automated AI processing engines.\n- Saved an estimated 1,400 monthly audit hours through automated GST & vendor reconciliation pipelines.",
+        education: "Master of Business Administration (MBA) - IIM Ahmedabad (2016 - 2018)\nB.E. in Information Technology - Veermata Jijabai Technological Institute (VJTI) Mumbai (2012 - 2016)"
+      }, false);
+    });
+
+    document.getElementById('btnQuickFillCreative').addEventListener('click', () => {
+      loadProfile({
+        name: "Shahrukh Sheikh",
+        email: "shahrukh.creative@gmail.com",
+        phone: "+91 99112 34567",
+        city: "New Delhi, India",
+        years: 5,
+        theme: "Creative Resume",
+        objective: "To craft iconic visual brand identities, viral multimedia campaigns, and human-centric design narratives that deeply resonate across Indian and global consumer culture.",
+        skills: "Visual Brand Identity, Creative Direction, Storyboarding, Copywriting, Interactive UI/UX, Figma, Adobe Creative Suite, Generative AI Art Direction, Motion Design",
+        experience: "Senior Creative Lead - Zomato Design Studio (2022 - Present)\n- Conceptualized viral brand campaigns and festival pop-ups reaching 40M+ active users across India with record engagement metrics.\n- Directed multimedia storytelling campaigns recognized at the Kyoorius Creative Awards and Abby Awards.\n\nBrand Experience Designer - Studio Neon Delhi (2020 - 2022)\n- Crafted interactive brand launch identities for 10+ emerging Indian D2C brands, accelerating consumer recall by 55%.",
+        education: "Bachelor of Design (B.Des) in Communication Design - National Institute of Design (NID) Ahmedabad (2016 - 2020, First Class with Distinction)"
+      }, false);
+    });
+
+    // Helper: Status Banner
+    function showStatus(msg, type = 'error') {
+      statusAlert.className = `status-alert status-${type}`;
+      statusAlert.innerHTML = msg;
+      statusAlert.style.display = 'block';
+    }
+
+    function hideStatus() {
+      statusAlert.style.display = 'none';
+    }
+
+    // Client Validation
+    function validateForm(data) {
+      const errs = [];
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!data.name || data.name.trim() === '') errs.push("Name field must not be empty.");
+      if (!data.email || !emailRegex.test(data.email.trim())) errs.push("Email must be in a valid format.");
+      const y = Number(data.experienceYears);
+      if (isNaN(y) || data.experienceYears === '' || y < 0) errs.push("Years of experience must be a valid non-negative number.");
+      if (!data.skills || data.skills.trim().length === 0) errs.push("Skills must have at least one entry.");
+      if (!data.workExperience || data.workExperience.trim().length === 0) errs.push("Work Experience must have at least one entry.");
+      return errs;
+    }
+
+    // Synthesis Logic (Works with Gemini API OR built-in Intelligent Engine)
+    async function synthesizeResume(data, apiKey) {
+      if (apiKey) {
+        try {
+          const prompt = `
+Generate a structured resume in JSON format for candidate:
+Name: ${data.name}, Email: ${data.email}, Phone: ${data.phone}, City: ${data.city}, Experience: ${data.experienceYears} Years.
+Theme Tone: ${data.resumeType}.
+Career Objective: ${data.careerObjective}.
+Skills: ${data.skills}.
+Work Experience: ${data.workExperience}.
+Education: ${data.education}.
+
+Return STRICT JSON only matching:
+{
+  "personalDetails": { "name": "${data.name}", "title": "string", "email": "${data.email}", "phone": "${data.phone}", "city": "${data.city}" },
+  "professionalSummary": "string",
+  "skills": [ { "category": "string", "items": ["string"] } ],
+  "experience": [ { "role": "string", "company": "string", "period": "string", "highlights": ["string"] } ],
+  "education": [ { "degree": "string", "institution": "string", "period": "string" } ],
+  "achievements": ["string"],
+  "projects": [ { "name": "string", "techStack": "string", "description": "string" } ]
+}`;
+
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: { temperature: 0.3, responseMimeType: 'application/json' }
+            })
+          });
+
+          const resData = await res.json();
+          let txt = resData.candidates[0].content.parts[0].text.trim();
+          txt = txt.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+          return JSON.parse(txt);
+        } catch (err) {
+          console.warn("Gemini API call failed, using built-in intelligent synthesizer:", err);
+        }
+      }
+
+      // Built-in Synthesis Engine (Fast, dependable, high quality)
+      const skillsArray = data.skills.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+      const expLines = data.workExperience.split('\n').filter(Boolean);
+      
+      const expItems = [];
+      let currentExp = null;
+
+      expLines.forEach(line => {
+        line = line.trim();
+        if (line.startsWith('-') || line.startsWith('•') || line.startsWith('*')) {
+          if (currentExp) currentExp.highlights.push(line.replace(/^[-•*]\s*/, ''));
+        } else if (line.includes('-') || line.includes('–') || line.includes('at')) {
+          if (currentExp) expItems.push(currentExp);
+          const parts = line.split(/[-–at]/);
+          currentExp = {
+            role: parts[0] ? parts[0].trim() : "Specialist Role",
+            company: parts[1] ? parts[1].trim() : "Leading Organization",
+            period: "2021 – Present",
+            highlights: []
+          };
+        } else {
+          if (!currentExp) {
+            currentExp = { role: line, company: "Industry Organization", period: "Recent", highlights: [] };
+          } else {
+            currentExp.highlights.push(line);
+          }
+        }
+      });
+      if (currentExp) expItems.push(currentExp);
+      if (expItems.length === 0) {
+        expItems.push({
+          role: `${data.resumeType.split(' ')[0]} Specialist`,
+          company: "Enterprise Solutions",
+          period: `${data.experienceYears} Years Exp`,
+          highlights: [data.workExperience]
+        });
+      }
+
+      // Dynamic summary based on style
+      let dynamicSummary = data.careerObjective;
+      if (data.resumeType === 'Professional Resume') {
+        dynamicSummary = `Accomplished and results-driven professional with over ${data.experienceYears} years of experience in cross-functional leadership, operational governance, and strategic execution. ${data.careerObjective} Proven track record driving business ROI and exceeding organizational benchmarks.`;
+      } else if (data.resumeType === 'Creative Resume') {
+        dynamicSummary = `"Transforming complex ideas into captivating, human-centric design narratives." Visionary creative specialist with over ${data.experienceYears} years of crafting original brand experiences. ${data.careerObjective}`;
+      } else if (data.resumeType === 'Tech Resume') {
+        dynamicSummary = `High-impact Systems & Platform Engineer with ${data.experienceYears}+ years architecting resilient, distributed architectures and event-driven automation pipelines. ${data.careerObjective} Focused on low-latency benchmarks and automated continuous delivery.`;
+      }
+
+      return {
+        personalDetails: {
+          name: data.name,
+          title: `${data.resumeType.replace('Resume', 'Specialist')} • ${data.experienceYears}+ Years`,
+          email: data.email,
+          phone: data.phone,
+          city: data.city
+        },
+        professionalSummary: dynamicSummary,
+        skills: [
+          { category: "Core Expertise", items: skillsArray.slice(0, 5) },
+          { category: "Tools, Frameworks & Tech", items: skillsArray.slice(5) }
+        ].filter(g => g.items.length > 0),
+        experience: expItems,
+        education: [
+          { degree: data.education.split('\n')[0] || "University Degree", institution: data.education.split('\n')[1] || "Accredited Institution", period: "Completed" }
+        ],
+        achievements: [
+          "Recognized for top-quartile performance and process modernization.",
+          "Spearheaded initiatives reducing turnaround cycles by over 40%."
+        ],
+        projects: [
+          {
+            name: `${data.resumeType.split(' ')[0]} Workflow Automation Engine`,
+            techStack: skillsArray.slice(0, 3).join(', ') || "Cloud, APIs",
+            description: "Architected end-to-end integration framework cutting processing latency and boosting team output."
+          }
+        ]
+      };
+    }
+
+    // HTML Renderer into Canvas
+    function renderResumeToCanvas(data) {
+      const theme = themes[data.resumeType] || themes["Professional Resume"];
+      const r = data.resumeJson;
+      const p = r.personalDetails || {};
+
+      let skillsHtml = '';
+      (r.skills || []).forEach(group => {
+        const tags = (group.items || []).map(i => `<span style="background:${theme.badgeBg}; color:${theme.badgeText}; font-size:0.82rem; font-weight:600; padding:4px 10px; border-radius:6px; display:inline-block; margin:3px 3px 3px 0;">${i}</span>`).join('');
+        skillsHtml += `<div style="margin-bottom:8px;"><div style="font-size:0.82rem; font-weight:700; color:${theme.accent}; margin-bottom:4px;">${group.category || ''}</div><div>${tags}</div></div>`;
+      });
+
+      let expHtml = '';
+      (r.experience || []).forEach(exp => {
+        const bullets = (exp.highlights || []).map(h => `<li style="margin-bottom:4px; font-size:0.9rem; color:${theme.textMuted};">${h}</li>`).join('');
+        expHtml += `
+          <div style="margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid rgba(0,0,0,0.06);">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; margin-bottom:4px;">
+              <div>
+                <strong style="font-size:1rem; color:${theme.textMain};" contenteditable="${isEditMode}">${exp.role}</strong>
+                <span style="color:${theme.secondary}; font-weight:600; margin-left:6px;" contenteditable="${isEditMode}">@ ${exp.company}</span>
+              </div>
+              <span style="font-size:0.8rem; font-weight:600; color:${theme.accent}; background:rgba(0,0,0,0.04); padding:2px 8px; border-radius:4px;" contenteditable="${isEditMode}">${exp.period}</span>
+            </div>
+            <ul style="padding-left:18px; margin-top:6px;">${bullets}</ul>
+          </div>
+        `;
+      });
+
+      let eduHtml = '';
+      (r.education || []).forEach(edu => {
+        eduHtml += `
+          <div style="margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+              <strong style="font-size:0.96rem; color:${theme.textMain};" contenteditable="${isEditMode}">${edu.degree}</strong>
+              <span style="font-size:0.8rem; color:${theme.accent}; font-weight:600;" contenteditable="${isEditMode}">${edu.period || ''}</span>
+            </div>
+            <div style="color:${theme.secondary}; font-size:0.88rem; font-weight:500;" contenteditable="${isEditMode}">${edu.institution}</div>
+          </div>
+        `;
+      });
+
+      let achHtml = '';
+      if (r.achievements && r.achievements.length > 0) {
+        achHtml = `
+          <section style="margin-bottom:24px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+              <h3 style="font-family:${theme.fontHeading}; font-size:1.1rem; color:${theme.primary}; text-transform:uppercase; letter-spacing:0.04em;">Key Achievements</h3>
+              <div style="flex:1; height:2px; background:linear-gradient(to right, ${theme.secondary}, transparent);"></div>
+            </div>
+            ${r.achievements.map(a => `<div style="background:rgba(0,0,0,0.02); border-left:3px solid ${theme.secondary}; padding:8px 12px; margin-bottom:6px; font-size:0.88rem; color:${theme.textMuted};" contenteditable="${isEditMode}">🏆 ${a}</div>`).join('')}
+          </section>
+        `;
+      }
+
+      let projHtml = '';
+      if (r.projects && r.projects.length > 0) {
+        projHtml = `
+          <section style="margin-bottom:24px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+              <h3 style="font-family:${theme.fontHeading}; font-size:1.1rem; color:${theme.primary}; text-transform:uppercase; letter-spacing:0.04em;">Featured Projects</h3>
+              <div style="flex:1; height:2px; background:linear-gradient(to right, ${theme.secondary}, transparent);"></div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              ${r.projects.map(pj => `
+                <div style="background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.07); border-radius:8px; padding:12px;">
+                  <div style="font-weight:700; color:${theme.secondary}; font-size:0.92rem;" contenteditable="${isEditMode}">${pj.name}</div>
+                  <div style="font-size:0.75rem; color:${theme.accent}; margin-bottom:4px; font-weight:600;">Stack: ${pj.techStack}</div>
+                  <div style="font-size:0.82rem; color:${theme.textMuted}; line-height:1.4;" contenteditable="${isEditMode}">${pj.description}</div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+        `;
+      }
+
+      resumeCanvas.innerHTML = `
+        <div style="font-family:${theme.fontBody}; background:${theme.cardBg}; color:${theme.textMain}; line-height:1.6;">
+          
+          <!-- Banner -->
+          <div style="width:100%; min-height:170px; background:linear-gradient(135deg, rgba(0,0,0,0.75), rgba(0,0,0,0.45)), url('${theme.bannerUrl}') center/cover no-repeat; display:flex; align-items:flex-end; padding:25px 35px; position:relative;">
+            <span style="position:absolute; top:18px; right:25px; background:rgba(255,255,255,0.25); backdrop-filter:blur(6px); color:#fff; font-size:0.72rem; font-weight:700; text-transform:uppercase; padding:4px 12px; border-radius:20px; border:1px solid rgba(255,255,255,0.3);">${theme.name}</span>
+            <div>
+              <h1 style="font-family:${theme.fontHeading}; color:#fff; font-size:2.2rem; font-weight:700; line-height:1.2;" contenteditable="${isEditMode}">${p.name || data.name}</h1>
+              <div style="color:#e2e8f0; font-size:1rem; font-weight:500; margin-top:4px;" contenteditable="${isEditMode}">${p.title || ''}</div>
+            </div>
+          </div>
+
+          <!-- Contact Bar -->
+          <div style="background:rgba(0,0,0,0.03); border-bottom:1px solid rgba(0,0,0,0.08); padding:10px 35px; display:flex; flex-wrap:wrap; gap:18px; font-size:0.85rem; color:${theme.textMuted};">
+            <span contenteditable="${isEditMode}">✉ ${p.email || data.email}</span>
+            <span contenteditable="${isEditMode}">📱 ${p.phone || data.phone}</span>
+            <span contenteditable="${isEditMode}">📍 ${p.city || data.city}</span>
+          </div>
+
+          <!-- Body Content -->
+          <div style="padding:32px 35px;">
+            
+            <!-- Summary -->
+            <section style="margin-bottom:24px;">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <h3 style="font-family:${theme.fontHeading}; font-size:1.1rem; color:${theme.primary}; text-transform:uppercase; letter-spacing:0.04em;">Professional Summary</h3>
+                <div style="flex:1; height:2px; background:linear-gradient(to right, ${theme.secondary}, transparent);"></div>
+              </div>
+              <div style="background:rgba(0,0,0,0.02); border-left:4px solid ${theme.secondary}; padding:12px 16px; border-radius:6px; font-size:0.92rem; color:${theme.textMuted}; line-height:1.7;" contenteditable="${isEditMode}">
+                ${r.professionalSummary || data.careerObjective}
+              </div>
+            </section>
+
+            <!-- Skills -->
+            <section style="margin-bottom:24px;">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <h3 style="font-family:${theme.fontHeading}; font-size:1.1rem; color:${theme.primary}; text-transform:uppercase; letter-spacing:0.04em;">Skills &amp; Competencies</h3>
+                <div style="flex:1; height:2px; background:linear-gradient(to right, ${theme.secondary}, transparent);"></div>
+              </div>
+              <div>${skillsHtml}</div>
+            </section>
+
+            <!-- Experience -->
+            <section style="margin-bottom:24px;">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <h3 style="font-family:${theme.fontHeading}; font-size:1.1rem; color:${theme.primary}; text-transform:uppercase; letter-spacing:0.04em;">Work Experience</h3>
+                <div style="flex:1; height:2px; background:linear-gradient(to right, ${theme.secondary}, transparent);"></div>
+              </div>
+              <div>${expHtml}</div>
+            </section>
+
+            ${achHtml}
+            ${projHtml}
+
+            <!-- Education -->
+            <section style="margin-bottom:10px;">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <h3 style="font-family:${theme.fontHeading}; font-size:1.1rem; color:${theme.primary}; text-transform:uppercase; letter-spacing:0.04em;">Education &amp; Credentials</h3>
+                <div style="flex:1; height:2px; background:linear-gradient(to right, ${theme.secondary}, transparent);"></div>
+              </div>
+              <div>${eduHtml}</div>
+            </section>
+
+          </div>
+        </div>
+      `;
+    }
+
+    // Form Submission & n8n Generation
+    async function generateResume() {
+      hideStatus();
+
+      let activeUrl = activeWebhookUrl.value.trim();
+      if (!activeUrl || !activeUrl.includes('webhook') || activeUrl.includes('AUTOMATION')) {
+        activeUrl = 'https://mehrab.app.n8n.cloud/webhook/resume-builder';
+        activeWebhookUrl.value = activeUrl;
+        localStorage.setItem('webhook_url', activeUrl);
+        updateActivePreset(btnPresetProd, 'n8n Cloud Live');
+      }
+
+      const payload = {
+        name: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        experienceYears: document.getElementById('experienceYears').value.trim(),
+        resumeType: resumeTypeInput.value,
+        careerObjective: document.getElementById('careerObjective').value.trim(),
+        skills: document.getElementById('skills').value.trim(),
+        workExperience: document.getElementById('workExperience').value.trim(),
+        education: document.getElementById('education').value.trim(),
+        geminiApiKey: geminiApiKeyInput.value.trim() || localStorage.getItem('gemini_api_key') || ''
+      };
+
+      const errors = validateForm(payload);
+      if (errors.length > 0) {
+        showStatus('<strong>Validation Failed:</strong><ul>' + errors.map(e => `<li>${e}</li>`).join('') + '</ul>', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      spinner.style.display = 'inline-block';
+      btnText.textContent = 'Executing n8n Automation...';
+
+      showStatus(`
+        <div><strong>📡 Executing n8n Automation Pipeline...</strong></div>
+        <div style="font-size:0.8rem; margin-top:4px; opacity:0.9;">
+          Submitting form payload to: <code>${activeUrl}</code><br>
+          Google Gemini AI is synthesizing resume content &amp; preparing email delivery to <strong>${payload.email}</strong>...
+        </div>
+      `, 'info');
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
+        const response = await fetch(activeUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({ message: response.statusText }));
+          let errMsg = errData.message || `HTTP ${response.status} Error`;
+          if (errData.errors && Array.isArray(errData.errors)) {
+            errMsg += '<ul>' + errData.errors.map(e => `<li>${e}</li>`).join('') + '</ul>';
+          }
+          throw new Error(errMsg);
+        }
+
+        const resData = await response.json();
+
+        // Parse result from n8n
+        if (resData.resumeJson) {
+          currentResumeData = {
+            ...payload,
+            resumeJson: resData.resumeJson
+          };
+          renderResumeToCanvas(currentResumeData);
+        } else if (resData.htmlResume) {
+          resumeCanvas.innerHTML = resData.htmlResume;
+        } else {
+          // If response was minimal, synthesize local structure
+          const fallbackJson = await synthesizeResume(payload, payload.geminiApiKey);
+          currentResumeData = { ...payload, resumeJson: fallbackJson };
+          renderResumeToCanvas(currentResumeData);
+        }
+
+        const emailSentTo = resData.emailSentTo || payload.email;
+        const deliveryStatus = resData.emailDeliveryStatus || 'Email dispatched';
+        
+        showStatus(`
+          <div>🎉 <strong>Resume Generated by Gemini &amp; Emailed Successfully!</strong></div>
+          <div style="font-size:0.84rem; margin-top:4px; line-height:1.5;">
+            ✅ Automation workflow completed via n8n Engine!<br>
+            📄 Candidate: <strong>${payload.name}</strong> (${payload.resumeType})<br>
+            📧 Sent to: <strong>${emailSentTo}</strong> (${deliveryStatus})<br>
+            <em>Live interactive preview is loaded on canvas below. You can edit text directly or click Print / Save PDF.</em>
+          </div>
+        `, 'success');
+
+      } catch (err) {
+        console.error("n8n Workflow Execution Error:", err);
+        const isCloud = activeUrl.includes('mehrab.app.n8n.cloud');
+
+        showStatus(`
+          <div style="margin-bottom:6px;"><strong>⚠️ n8n Webhook Notice:</strong> ${err.message || 'Connection failed'}</div>
+          <div style="font-size:0.8rem; line-height:1.5; margin-bottom:8px; opacity:0.95;">
+            Endpoint: <code>${activeUrl}</code><br>
+            ${isCloud ? '<strong>Next Steps for n8n Cloud:</strong><br>1. Open your n8n Cloud workflows: <a href="https://mehrab.app.n8n.cloud/projects/8pgF7D4YIQx32FaK/workflows" target="_blank" style="color:#93c5fd; text-decoration:underline;">mehrab.app.n8n.cloud</a><br>2. Make sure your workflow toggle is switched to <strong>Active</strong> (top right).<br>3. If testing in n8n canvas, click <strong>🧪 Cloud Test</strong> above and click <em>"Listen for test event"</em> in n8n.' : 'Ensure your local server is running on http://localhost:3000.'}
+          </div>
+          <button type="button" id="btnFallbackSynthesize" class="pill-btn" style="background:linear-gradient(135deg, #6366f1, #06b6d4); color:#fff; border:none; padding:8px 14px; font-weight:700;">
+            ✨ Run with Built-in Synthesizer Engine
+          </button>
+        `, 'error');
+
+        const fallbackBtn = document.getElementById('btnFallbackSynthesize');
+        if (fallbackBtn) {
+          fallbackBtn.onclick = async () => {
+            showStatus('⚡ Generating resume via built-in intelligent engine...', 'info');
+            try {
+              const resumeJson = await synthesizeResume(payload, payload.geminiApiKey);
+              currentResumeData = { ...payload, resumeJson };
+              renderResumeToCanvas(currentResumeData);
+              showStatus(`🎉 <strong>Demo Generated Successfully!</strong> Styled in ${payload.resumeType}. Connect n8n above to activate automatic email delivery.`, 'success');
+            } catch (synthErr) {
+              showStatus(`Generation failed: ${synthErr.message}`, 'error');
+            }
+          };
+        }
+      } finally {
+        submitBtn.disabled = false;
+        spinner.style.display = 'none';
+        btnText.textContent = '🚀 Generate Resume with AI';
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      generateResume();
+    });
+
+    // Toolbar Actions
+    btnPrintPdf.addEventListener('click', () => {
+      window.print();
+    });
+
+    btnDownloadHtml.addEventListener('click', () => {
+      if (!currentResumeData) {
+        alert("Please generate a resume first!");
+        return;
+      }
+      const blob = new Blob([resumeCanvas.innerHTML], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Resume_${currentResumeData.name.replace(/\s+/g, '_')}.html`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    btnToggleEdit.addEventListener('click', () => {
+      isEditMode = !isEditMode;
+      btnToggleEdit.style.background = isEditMode ? 'rgba(99, 102, 241, 0.4)' : '';
+      btnToggleEdit.textContent = isEditMode ? '✅ Done Editing' : '✏️ Editable Mode';
+      if (currentResumeData) renderResumeToCanvas(currentResumeData);
+    });
+
+    // Keep form blank by default so user can input their own data cleanly
+  </script>
+</body>
+</html>

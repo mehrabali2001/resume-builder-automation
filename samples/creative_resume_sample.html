@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume for Shahrukh Sheikh - Creative Template</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #ea580c;
+      --secondary: #ec4899;
+      --accent: #db2777;
+      --bg-page: #fff1f2;
+      --card-bg: #ffffff;
+      --text-dark: #1f2937;
+      --text-muted: #4b5563;
+      --border-color: #fce7f3;
+      --badge-bg: #ffe4e6;
+      --badge-text: #be123c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-dark);
+      line-height: 1.6;
+      padding: 40px 15px;
+    }
+
+    .resume-container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(236, 72, 153, 0.12);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Template Banner */
+    .resume-banner {
+      width: 100%;
+      height: 200px;
+      position: relative;
+      background: linear-gradient(135deg, rgba(234, 88, 12, 0.85), rgba(236, 72, 153, 0.85)),
+                  url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      display: flex;
+      align-items: flex-end;
+      padding: 30px 40px;
+    }
+
+    .resume-badge {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .banner-text h1 {
+      font-family: 'Playfair Display', serif;
+      color: #ffffff;
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .banner-text .candidate-title {
+      color: #fed7aa;
+      font-size: 1.15rem;
+      font-weight: 500;
+      margin-top: 6px;
+    }
+
+    /* Contact Strip */
+    .contact-strip {
+      background: #fff7ed;
+      border-bottom: 2px solid #ffedd5;
+      padding: 16px 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .contact-item span.icon-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #fed7aa;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #c2410c;
+      font-size: 0.8rem;
+    }
+
+    /* Content Body */
+    .resume-body {
+      padding: 38px 45px;
+    }
+
+    .resume-section {
+      margin-bottom: 32px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, #fdba74, #f472b6, transparent);
+    }
+
+    .story-text {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      border-left: 3px solid #f472b6;
+      padding-left: 18px;
+      font-style: italic;
+    }
+
+    /* Creative Skills Bubbles */
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .skill-pill {
+      background: linear-gradient(135deg, #fff7ed, #fdf2f8);
+      border: 1px solid #fbcfe8;
+      color: #9d174d;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 7px 16px;
+      border-radius: 30px;
+      box-shadow: 0 2px 4px rgba(236, 72, 153, 0.08);
+      transition: all 0.2s ease;
+    }
+
+    /* Experience Story Cards */
+    .experience-card {
+      background: #fff;
+      border: 1px solid #ffe4e6;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 12px rgba(234, 88, 12, 0.04);
+      border-left: 4px solid var(--secondary);
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .role-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #831843;
+    }
+
+    .company-tag {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .exp-period {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #db2777;
+      background: #fdf2f8;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .bullet-list {
+      list-style-type: none;
+      margin-top: 10px;
+    }
+
+    .bullet-list li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 8px;
+      font-size: 0.94rem;
+      color: var(--text-muted);
+    }
+
+    .bullet-list li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    /* Projects Spotlight */
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .project-box {
+      background: linear-gradient(135deg, #fffaf5, #fdf4f8);
+      border: 1px solid #fecdd3;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .project-name {
+      font-weight: 700;
+      color: #9f1239;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .project-desc {
+      font-size: 0.86rem;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    /* Print & Actions */
+    .resume-actions {
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, #ea580c, #ec4899);
+      color: #fff;
+      border: none;
+      padding: 11px 26px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .resume-container { box-shadow: none; border: none; }
+      .no-print { display: none; }
+    }
+
+    @media (max-width: 650px) {
+      .project-grid { grid-template-columns: 1fr; }
+      .resume-body { padding: 24px 20px; }
+      .resume-banner { padding: 20px; height: 170px; }
+      .banner-text h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="resume-container">
+    
+    <!-- Banner Header -->
+    <div class="resume-banner">
+      <div class="resume-badge">Creative Resume</div>
+      <div class="banner-text">
+        <h1>Shahrukh Sheikh</h1>
+        <div class="candidate-title">Brand Strategist &amp; Creative Experience Director</div>
+      </div>
+    </div>
+
+    <!-- Contact Strip -->
+    <div class="contact-strip">
+      <div class="contact-item">
+        <span class="icon-circle">✉</span>
+        <span>shahrukh.creative@gmail.com</span>
+      </div>
+      <div class="contact-item">
+        <span class="icon-circle">📱</span>
+        <span>+91 99112 34567</span>
+      </div>
+      <div class="contact-item">
+        <span class="icon-circle">📍</span>
+        <span>New Delhi, India</span>
+      </div>
+    </div>
+
+    <div class="resume-body">
+      
+      <!-- Creative Narrative Summary -->
+      <section class="resume-section">
+        <div class="section-header">
+          <span class="section-title">Creative Story &amp; Philosophy</span>
+          <div class="section-line"></div>
+        </div>
+        <p class="story-text">
+          "Design isn't just about surface aesthetics—it is the emotional catalyst that transforms curiosity into enduring brand loyalty." Over 5 years orchestrating high-energy visual identities, experiential multimedia narratives, and viral campaigns that spark imagination and elevate brands into cultural touchstones across India.
+        </p>
+      </section>
+
+      <!-- Signature Skills -->
+      <section class="resume-section">
+        <div class="section-header">
+          <span class="section-title">Signature Talents &amp; Toolset</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="skills-grid">
+          <span class="skill-pill">Visual Brand Identity</span>
+          <span class="skill-pill">Creative Direction</span>
+          <span class="skill-pill">Storyboarding &amp; Copywriting</span>
+          <span class="skill-pill">Interactive UI/UX</span>
+          <span class="skill-pill">Figma &amp; Adobe Creative Suite</span>
+          <span class="skill-pill">AI-Assisted Art Direction</span>
+          <span class="skill-pill">Motion &amp; Video Production</span>
+          <span class="skill-pill">Indian Cultural Aesthetics &amp; Typography</span>
+        </div>
+      </section>
+
+      <!-- Experience -->
+      <section class="resume-section">
+        <div class="section-header">
+          <span class="section-title">The Creative Journey</span>
+          <div class="section-line"></div>
+        </div>
+
+        <div class="experience-card">
+          <div class="exp-header">
+            <div>
+              <span class="role-title">Senior Creative Lead</span> — <span class="company-tag">Zomato Design Studio</span>
+            </div>
+            <span class="exp-period">2022 – Present</span>
+          </div>
+          <ul class="bullet-list">
+            <li>Re-imagined multi-channel digital campaigns for festive occasions reaching <strong>40M+ active users across India</strong>.</li>
+            <li>Authored interactive storytelling visual assets recognized at the Kyoorius Design Awards and Abby Awards.</li>
+            <li>Mentored a dynamic studio cohort of 12 illustrators, 3D motion designers, and brand strategists.</li>
+          </ul>
+        </div>
+
+        <div class="experience-card">
+          <div class="exp-header">
+            <div>
+              <span class="role-title">Brand Experience Designer</span> — <span class="company-tag">Studio Neon Delhi</span>
+            </div>
+            <span class="exp-period">2020 – 2022</span>
+          </div>
+          <ul class="bullet-list">
+            <li>Crafted interactive brand launch identities for 10+ emerging Indian D2C lifestyle brands, accelerating consumer recall by <strong>55%</strong>.</li>
+            <li>Streamlined client creative pitch approval cycles by 35% through rapid interactive moodboard frameworks.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Featured Projects -->
+      <section class="resume-section">
+        <div class="section-header">
+          <span class="section-title">Featured Highlights &amp; Projects</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="project-grid">
+          <div class="project-box">
+            <div class="project-name">✨ Zomato Gold Relaunch Visuals</div>
+            <div class="project-desc">Interactive sensory food culture campaign reaching 15M+ impressions in its inaugural week.</div>
+          </div>
+          <div class="project-box">
+            <div class="project-name">🎨 DesiVibe Sustainable Packaging</div>
+            <div class="project-desc">100% eco-friendly biodegradable artisan product packaging winning Gold at Indian Design Forum 2023.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Education -->
+      <section class="resume-section">
+        <div class="section-header">
+          <span class="section-title">Education &amp; Roots</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="experience-card" style="margin-bottom: 0;">
+          <div class="exp-header">
+            <div class="role-title">Bachelor of Design (B.Des) in Communication Design</div>
+            <span class="exp-period">2016 – 2020</span>
+          </div>
+          <div class="company-tag">National Institute of Design (NID) Ahmedabad (First Class with Distinction)</div>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+  <div class="resume-actions no-print">
+    <button class="btn-print" onclick="window.print()">
+      🖨️ Print or Save as PDF
+    </button>
+  </div>
+
+</body>
+</html>
