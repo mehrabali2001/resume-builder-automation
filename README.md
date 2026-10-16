@@ -1,10 +1,13 @@
 # 🚀 AI Resume Builder Automation
 ### Built with n8n, Google Gemini AI, WordPress REST API & Automated HTML Email
 
+[![Live Web App](https://img.shields.io/badge/🌐%20Live%20Demo-Launch%20App-6366F1?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mehrabali2001.github.io/resume-builder-automation/)
 [![n8n Workflow](https://img.shields.io/badge/n8n-Workflow%20Ready-EA4B71?style=for-the-badge&logo=n8n)](n8n_workflow_ai_resume_builder.json)
 [![Gemini 1.5](https://img.shields.io/badge/Google%20Gemini-1.5%20Flash-4285F4?style=for-the-badge&logo=google)](gemini_prompts.md)
 [![WordPress](https://img.shields.io/badge/WordPress-REST%20API-21759B?style=for-the-badge&logo=wordpress)](wordpress_setup_guide.md)
 [![Email Automation](https://img.shields.io/badge/Email-Responsive%20HTML-10B981?style=for-the-badge)](samples/email_sample.html)
+
+> 🌐 **Live Web Application Link:** [https://mehrabali2001.github.io/resume-builder-automation/](https://mehrabali2001.github.io/resume-builder-automation/)
 
 ---
 
