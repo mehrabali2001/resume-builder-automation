@@ -30,7 +30,7 @@ const server = http.createServer((req, res) => {
   }
 
   // Built-in Mock Webhook for Local Browser Testing (mirrors n8n Webhook + Validation)
-  if (req.url === '/webhook/resume-builder' && req.method === 'POST') {
+  if ((req.url === '/webhook/ai-resume-generator' || req.url === '/webhook/resume-builder') && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => { body += chunk; });
     req.on('end', () => {
